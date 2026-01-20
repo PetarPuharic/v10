@@ -72,7 +72,7 @@ namespace all_tests
 			std::vector<double> d;
 
 			// TODO: calculate distances from origin (from x and y collections) to new vector
-			std::transform(std::begin(x), std::end(x), y.begin(), std::back_inserter(d), [](int a, int b) { return sqrt(a * a + b * b); });
+			std::transform(std::begin(x), std::end(x), std::begin(y), std::back_inserter(d), [](int a, int b) { return std::hypot(a, b); });
 			Assert::AreEqual(3ull, d.size());
 			Assert::AreEqual(5., d[0]);
 			Assert::AreEqual(13., d[1]);
@@ -113,7 +113,7 @@ namespace all_tests
 		TEST_METHOD(test_05b)
 		{
 			std::vector<double> v{ 1.5, 8, -11.23, 0, 1e10, 1e10, 1e10, 0, 99 };
-			auto number_of_invalid = std::count_if(v.begin(), v.end(), [](double d) {return d == 1e10; });
+			auto number_of_invalid = std::count(v.begin(), v.end(), 1e10);
 			Assert::AreEqual(3ll, number_of_invalid);
 		}
 		TEST_METHOD(test_05c)
@@ -139,7 +139,7 @@ namespace all_tests
 		{
 			std::vector<double> v{ 1e10, 8, -11.23, 0, 1e10, 1e10, 1e10, 0, 99 };
 			// TODO: change every invalid value (1e10) with -1 
-			std::replace_if(v.begin(), v.end(), [](double d) { return d == 1e10; }, -1.);
+			std::replace(v.begin(), v.end(), 1e10, -1.);
 			Assert::AreEqual(-1., v[0]);
 			Assert::AreEqual(-1., v[4]);
 			Assert::AreEqual(-1., v[6]);
@@ -158,7 +158,7 @@ namespace all_tests
 			std::vector<double> v{ 1e10, 8, -11.23, 0, 1e10, 1e10, 1e10, 0, 99 };
 			// TODO: delete all invalid values (1e10)
 			// remove uvjek uz erase
-			v.erase(std::remove_if(v.begin(), v.end(), [](double d) { return d == 1e10; }), v.end());
+			v.erase(std::remove(v.begin(), v.end(), 1e10), v.end());
 			Assert::AreEqual(5ull, v.size());
 			Assert::AreEqual(8., v[0]);
 			Assert::AreEqual(99., v[4]);
